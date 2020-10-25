@@ -1,11 +1,15 @@
 package net.babamod.mineclass.commands;
 
 import net.babamod.mineclass.classes.MineClassFactory;
-import net.babamod.mineclass.utils.AppliedStatus;
+import net.babamod.mineclass.utils.InvocationsFinder;
+import net.babamod.mineclass.utils.NumberOfInvocations;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class CommandClass implements CommandExecutor {
   @Override
@@ -18,28 +22,43 @@ public class CommandClass implements CommandExecutor {
     if (sender instanceof Player) {
       Player player = (Player) sender;
       if (MineClassFactory.getInstance().getAvailableClassCodes().contains(args[0])) {
-        AppliedStatus.getInstance().setStatus(player, args[0]);
+        if (MineClassFactory.getInstance().getClassCode(player).equals("beast_master")) {
+          InvocationsFinder.findWolfs(player).forEach(entity -> {
+            entity.remove();
+            NumberOfInvocations.getInstance().decreaseNumber(player);
+          });
+          InvocationsFinder.findCats(player).forEach(entity -> {
+            entity.remove();
+            NumberOfInvocations.getInstance().decreaseNumber(player);
+          });
+          InvocationsFinder.findHorses(player).forEach(Entity::remove);
+        }
         MineClassFactory.clearAllClassEffects(player);
         MineClassFactory.getInstance().reapplyEffectsByCode(args[0], player);
         MineClassFactory.getInstance().giveItemsForClassByCode(args[0], player);
         MineClassFactory.getInstance().dropForbiddenItemsForClassByCode(args[0], player);
+        MineClassFactory.getInstance().setClassCode(player, args[0]);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION,200, 9));
         return true;
       }
-      if (args[0].equals("clear")) {
-        AppliedStatus.getInstance().setStatus(player, null);
+      if (args[0].equals("steve")) {
+        MineClassFactory.getInstance().setClassCode(player, "steve");
         MineClassFactory.clearAllClassEffects(player);
         return true;
       }
       if (args[0].equals("whoami")) {
-        String classCode = AppliedStatus.getInstance().getStatus(player);
-        if (classCode != null && !classCode.equals("none")) {
+        String classCode =
+            MineClassFactory.getInstance().getClassCode(player);
+        if (classCode != null) {
           player.sendMessage(String.format("You are a %s.", classCode));
         } else {
-          player.sendMessage("You are a simple steve.");
+          player.sendMessage("You are a steve.");
         }
         return true;
       }
     }
     return false;
   }
+
+
 }

@@ -1,6 +1,5 @@
 package net.babamod.mineclass.classes;
 
-import net.babamod.mineclass.utils.AppliedStatus;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,6 +20,7 @@ public class MineClassFactory {
     availableClasses.put("elf", new ElfClass());
     availableClasses.put("fire_dwarf", new FireDwarfClass());
     availableClasses.put("ender_elf", new EnderElfClass());
+    availableClasses.put("beast_master", new BeastMasterClass());
   }
 
   /** Point d'accès pour l'instance unique du singleton */
@@ -60,10 +60,24 @@ public class MineClassFactory {
     return availableClasses.keySet();
   }
 
+  public synchronized String getClassCode(Player player) {
+    return player.getScoreboardTags().stream()
+        .filter(availableClasses::containsKey)
+        .findFirst()
+        .orElse("steve");
+  }
+
+  public synchronized void setClassCode(Player player, String code) {
+    player
+        .getScoreboardTags()
+        .removeAll(availableClasses.keySet());
+    player.addScoreboardTag(code);
+  }
+
   public synchronized Optional<MineClass> getRightClass(Player player) {
     for (Map.Entry<String, MineClass> stringMineClassEntry : availableClasses.entrySet()) {
-      if (AppliedStatus.getInstance().getStatus(player) != null
-              && AppliedStatus.getInstance().getStatus(player).equals(stringMineClassEntry.getKey())
+      if (getClassCode(player) != null
+              && getClassCode(player).equals(stringMineClassEntry.getKey())
           || stringMineClassEntry.getValue().is(player)) {
         return Optional.of(stringMineClassEntry.getValue());
       }

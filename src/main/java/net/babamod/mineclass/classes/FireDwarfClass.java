@@ -86,8 +86,6 @@ public class FireDwarfClass extends MineClassImpl {
                   Collections.singletonList(new Pair<>(Enchantment.ARROW_INFINITE, 1))),
               new AbstractMap.SimpleEntry<>(
                   Material.FLINT_AND_STEEL, new ArrayList<Pair<Enchantment, Integer>>())
-              // See to make infinity working on crossbow
-              // Inventory auto smelt
               )
           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 

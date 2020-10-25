@@ -1,6 +1,5 @@
 package net.babamod.mineclass.classes;
 
-import net.babamod.mineclass.utils.AppliedStatus;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +30,7 @@ public abstract class MineClassImpl implements MineClass {
               player.addPotionEffect(
                   new PotionEffect(key, Integer.MAX_VALUE, value - 1, false, false));
             });
-    AppliedStatus.getInstance().setStatus(player, getCode());
+    MineClassFactory.getInstance().setClassCode(player, getCode());
   }
 
   @Override
