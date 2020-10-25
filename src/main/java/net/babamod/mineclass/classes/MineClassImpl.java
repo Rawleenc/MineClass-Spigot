@@ -11,14 +11,6 @@ import java.util.stream.Collectors;
 public abstract class MineClassImpl implements MineClass {
 
   @Override
-  public boolean is(Player player) {
-    return player.getActivePotionEffects().stream()
-        .map(PotionEffect::getType)
-        .collect(Collectors.toList())
-        .containsAll(getPotionEffects().keySet());
-  }
-
-  @Override
   public void reapplyEffects(Player player) {
     MineClassFactory.clearAllClassEffects(player);
     getPotionEffects()

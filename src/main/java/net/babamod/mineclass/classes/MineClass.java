@@ -19,8 +19,6 @@ public interface MineClass {
 
   Map<Material, List<Pair<Enchantment, Integer>>> getClassEnchantments();
 
-  boolean is(Player player);
-
   void reapplyEffects(Player player);
 
   boolean isItemForbidden(Material type);
