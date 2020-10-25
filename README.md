@@ -1,6 +1,6 @@
 ﻿# MineClass-Spigot
-   ## About the mod
-The mod is about putting classes in Minecraft and having fun ways of exploring the world. With the five classes proposed in this mod you will have many different ways of playing Minecraft! You want to agile and chop trees? Take the elf! You want to dig faster than your shadow? Take the dwarf class! And much more to try and enjoy!
+## About the mod
+This mod is about putting classes in Minecraft and having fun ways of exploring the world. With the five classes proposed in this mod you will have many different ways of playing Minecraft! You want to be agile and chop trees? Take the elf! You want to dig faster than your shadow? Take the dwarf class! And much more to try and enjoy!
 ## How to use
 1. Type the command /class and then select the class that you like.
 2. Enjoy!
