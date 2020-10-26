@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 public class DwarfClass extends MineClassImpl {
 
   private final Set<Material> forbiddenItems =

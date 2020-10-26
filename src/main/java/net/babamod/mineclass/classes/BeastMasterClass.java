@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 public class BeastMasterClass extends MineClassImpl {
 
   private static final Set<Material> forbiddenItems =

@@ -5,13 +5,12 @@ import net.babamod.mineclass.commands.CommandClass;
 import net.babamod.mineclass.listeners.MineClassListeners;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Mineclass extends JavaPlugin implements Listener {
+public final class Mineclass extends JavaPlugin {
 
   @Override
   public void onEnable() {
