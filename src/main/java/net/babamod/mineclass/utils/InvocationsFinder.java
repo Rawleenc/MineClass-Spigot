@@ -51,8 +51,8 @@ public class InvocationsFinder {
             entity ->
                 entity.hasMetadata("beastMasterHorse")
                     && entity.getMetadata("beastMasterHorse").stream()
-                    .anyMatch(
-                        metadataValue -> metadataValue.asString().equals(player.getName())))
+                        .anyMatch(
+                            metadataValue -> metadataValue.asString().equals(player.getName())))
         .collect(Collectors.toList());
   }
 }

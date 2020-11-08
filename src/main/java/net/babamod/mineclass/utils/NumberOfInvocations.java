@@ -44,5 +44,4 @@ public class NumberOfInvocations {
     }
     numberOfInvocations.put(playerName, integer - 1);
   }
-
 }

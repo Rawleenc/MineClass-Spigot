@@ -10,7 +10,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SuppressWarnings("unused")
 public class FireDwarfClass extends MineClassImpl {
 
   private static final Set<Material> forbiddenItems =
@@ -86,8 +85,7 @@ public class FireDwarfClass extends MineClassImpl {
                   Material.CROSSBOW,
                   Collections.singletonList(new Pair<>(Enchantment.ARROW_INFINITE, 1))),
               new AbstractMap.SimpleEntry<>(
-                  Material.FLINT_AND_STEEL, new ArrayList<Pair<Enchantment, Integer>>())
-              )
+                  Material.FLINT_AND_STEEL, new ArrayList<Pair<Enchantment, Integer>>()))
           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
   @Override

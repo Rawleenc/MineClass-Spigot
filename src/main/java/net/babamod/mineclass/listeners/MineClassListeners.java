@@ -295,9 +295,11 @@ public class MineClassListeners implements Listener {
       }
     }
     if (player.isSneaking()
-        && (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR))
+        && (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+            || event.getAction().equals(Action.RIGHT_CLICK_AIR))
         && MineClassFactory.getInstance().getClassCode(player).equals("ender_elf")
-        && event.getItem() != null && event.getItem().getType().equals(Material.ENDER_PEARL)) {
+        && event.getItem() != null
+        && event.getItem().getType().equals(Material.ENDER_PEARL)) {
       player.openInventory(player.getEnderChest());
       event.setCancelled(true);
     }

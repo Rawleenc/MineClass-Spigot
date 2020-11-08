@@ -13,7 +13,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SuppressWarnings("unused")
 public class EnderElfClass extends MineClassImpl {
 
   private static final Set<Material> forbiddenItems =

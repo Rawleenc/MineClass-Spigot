@@ -1,13 +1,11 @@
 package net.babamod.mineclass.classes;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
-import java.util.logging.Level;
 
 public class MineClassFactory {
   /** Instance unique pré-initialisée */
@@ -70,16 +68,14 @@ public class MineClassFactory {
   }
 
   public synchronized void setClassCode(Player player, String code) {
-    player
-        .getScoreboardTags()
-        .removeAll(availableClasses.keySet());
+    player.getScoreboardTags().removeAll(availableClasses.keySet());
     player.addScoreboardTag(code);
   }
 
   public synchronized Optional<MineClass> getRightClass(Player player) {
     for (Map.Entry<String, MineClass> stringMineClassEntry : availableClasses.entrySet()) {
       if (getClassCode(player) != null
-              && getClassCode(player).equals(stringMineClassEntry.getKey())) {
+          && getClassCode(player).equals(stringMineClassEntry.getKey())) {
         return Optional.of(stringMineClassEntry.getValue());
       }
     }

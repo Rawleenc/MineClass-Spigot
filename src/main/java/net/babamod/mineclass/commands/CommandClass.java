@@ -3,11 +3,11 @@ package net.babamod.mineclass.commands;
 import net.babamod.mineclass.classes.MineClassFactory;
 import net.babamod.mineclass.utils.InvocationsFinder;
 import net.babamod.mineclass.utils.NumberOfInvocations;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -23,14 +23,18 @@ public class CommandClass implements CommandExecutor {
       Player player = (Player) sender;
       if (MineClassFactory.getInstance().getAvailableClassCodes().contains(args[0])) {
         if (MineClassFactory.getInstance().getClassCode(player).equals("beast_master")) {
-          InvocationsFinder.findWolfs(player).forEach(entity -> {
-            entity.remove();
-            NumberOfInvocations.getInstance().decreaseNumber(player);
-          });
-          InvocationsFinder.findCats(player).forEach(entity -> {
-            entity.remove();
-            NumberOfInvocations.getInstance().decreaseNumber(player);
-          });
+          InvocationsFinder.findWolfs(player)
+              .forEach(
+                  entity -> {
+                    entity.remove();
+                    NumberOfInvocations.getInstance().decreaseNumber(player);
+                  });
+          InvocationsFinder.findCats(player)
+              .forEach(
+                  entity -> {
+                    entity.remove();
+                    NumberOfInvocations.getInstance().decreaseNumber(player);
+                  });
           InvocationsFinder.findHorses(player).forEach(Entity::remove);
         }
         MineClassFactory.clearAllClassEffects(player);
@@ -39,7 +43,7 @@ public class CommandClass implements CommandExecutor {
         MineClassFactory.getInstance().dropForbiddenItemsForClassByCode(args[0], player);
         MineClassFactory.getInstance().setClassCode(player, args[0]);
         if (!player.hasPotionEffect(PotionEffectType.SATURATION)) {
-          player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION,200, 9));
+          player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 200, 9));
         }
         return true;
       }
@@ -49,8 +53,7 @@ public class CommandClass implements CommandExecutor {
         return true;
       }
       if (args[0].equals("whoami")) {
-        String classCode =
-            MineClassFactory.getInstance().getClassCode(player);
+        String classCode = MineClassFactory.getInstance().getClassCode(player);
         if (classCode != null) {
           player.sendMessage(String.format("You are a %s.", classCode));
         } else {
@@ -61,6 +64,4 @@ public class CommandClass implements CommandExecutor {
     }
     return false;
   }
-
-
 }

@@ -6,7 +6,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public abstract class MineClassImpl implements MineClass {
 
