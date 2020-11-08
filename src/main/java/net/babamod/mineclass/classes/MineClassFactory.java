@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
-import org.reflections.Reflections;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -19,15 +18,11 @@ public class MineClassFactory {
   /** Constructeur privé */
   private MineClassFactory() {
     availableClasses = new HashMap<>();
-    // Reflecting all MineClass classes and instantiates them with there codes
-    for (Class<? extends MineClassImpl> aClass : new Reflections().getSubTypesOf(MineClassImpl.class)) {
-      try {
-        MineClass mineClass = aClass.newInstance();
-        availableClasses.put(mineClass.getCode(), mineClass);
-      } catch (InstantiationException | IllegalAccessException e) {
-        Bukkit.getLogger().log(Level.WARNING, e.getMessage());
-      }
-    }
+    availableClasses.put("dwarf", new DwarfClass());
+    availableClasses.put("elf", new ElfClass());
+    availableClasses.put("fire_dwarf", new FireDwarfClass());
+    availableClasses.put("ender_elf", new EnderElfClass());
+    availableClasses.put("beast_master", new BeastMasterClass());
   }
 
   /** Point d'accès pour l'instance unique du singleton */
