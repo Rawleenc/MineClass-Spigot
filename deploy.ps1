@@ -1,0 +1,1 @@
+Copy-Item 'build\libs\MineClass.jar' $args[0]
