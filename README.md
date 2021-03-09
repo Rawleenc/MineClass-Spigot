@@ -102,7 +102,7 @@ This mod is about putting classes in Minecraft and having fun ways of exploring 
     * horses
 
 
-To upgrade a dog in a wolf use steak and to upgrade a wolf in a hellhound use blase rods
+To upgrade a dog in a wolf use steak and to upgrade a wolf in a hellhound use blaze rods
 * soulbound weapons:
   * bone
   * salmon
