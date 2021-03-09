@@ -96,10 +96,13 @@ This mod is about putting classes in Minecraft and having fun ways of exploring 
   * can spawn animals
     * dogs:  
       normal dog  
-      beast master wolf (has regenration 4, strength 2, speed 3)  
-      beast master hellhound (has regeneration 5, strength 3, speed 5, fire aspect)  
+      beast master wolf (has regenration 4, strength 2, speed 3)
+      beast master hellhound (has regeneration 5, strength 3, speed 5, fire aspect)
     * cats
     * horses
+
+
+To upgrade a dog in a wolf use steak and to upgrade a wolf in a hellhound use blase rods
 * soulbound weapons:
   * bone
   * salmon
