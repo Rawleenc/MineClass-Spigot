@@ -1,6 +1,6 @@
-package net.babamod.mineclass.utils;
+package net.rawmod.mineclass.utils;
 
-import net.babamod.mineclass.classes.MineClassFactory;
+import net.rawmod.mineclass.classes.MineClassFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 

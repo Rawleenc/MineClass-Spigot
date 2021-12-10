@@ -1,8 +1,8 @@
-package net.babamod.mineclass.commands;
+package net.rawmod.mineclass.commands;
 
-import net.babamod.mineclass.classes.MineClassFactory;
-import net.babamod.mineclass.utils.InvocationsFinder;
-import net.babamod.mineclass.utils.NumberOfInvocations;
+import net.rawmod.mineclass.classes.MineClassFactory;
+import net.rawmod.mineclass.utils.InvocationsFinder;
+import net.rawmod.mineclass.utils.NumberOfInvocations;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

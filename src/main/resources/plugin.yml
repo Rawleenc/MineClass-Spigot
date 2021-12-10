@@ -1,6 +1,6 @@
 name: Mineclass
 version: @version@
-main: net.babamod.mineclass.Mineclass
+main: net.rawmod.mineclass.Mineclass
 api-version: 1.16
 authors: [ Barazok ]
 commands:

@@ -1,4 +1,4 @@
-package net.babamod.mineclass.utils;
+package net.rawmod.mineclass.utils;
 
 public class Pair<F, S> {
   private F first;

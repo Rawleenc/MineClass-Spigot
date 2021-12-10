@@ -1,8 +1,8 @@
-package net.babamod.mineclass;
+package net.rawmod.mineclass;
 
-import net.babamod.mineclass.classes.MineClassFactory;
-import net.babamod.mineclass.commands.CommandClass;
-import net.babamod.mineclass.listeners.MineClassListeners;
+import net.rawmod.mineclass.classes.MineClassFactory;
+import net.rawmod.mineclass.commands.CommandClass;
+import net.rawmod.mineclass.listeners.MineClassListeners;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;

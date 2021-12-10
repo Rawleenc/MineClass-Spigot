@@ -1,9 +1,9 @@
-package net.babamod.mineclass.listeners;
+package net.rawmod.mineclass.listeners;
 
-import net.babamod.mineclass.Mineclass;
-import net.babamod.mineclass.classes.MineClass;
-import net.babamod.mineclass.classes.MineClassFactory;
-import net.babamod.mineclass.utils.*;
+import net.rawmod.mineclass.Mineclass;
+import net.rawmod.mineclass.classes.MineClass;
+import net.rawmod.mineclass.classes.MineClassFactory;
+import net.rawmod.mineclass.utils.*;
 import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;

@@ -1,4 +1,4 @@
-package net.babamod.mineclass.utils;
+package net.rawmod.mineclass.utils;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

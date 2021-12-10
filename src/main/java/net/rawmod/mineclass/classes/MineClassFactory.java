@@ -1,4 +1,4 @@
-package net.babamod.mineclass.classes;
+package net.rawmod.mineclass.classes;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

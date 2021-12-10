@@ -1,6 +1,6 @@
-package net.babamod.mineclass.classes;
+package net.rawmod.mineclass.classes;
 
-import net.babamod.mineclass.utils.Pair;
+import net.rawmod.mineclass.utils.Pair;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
