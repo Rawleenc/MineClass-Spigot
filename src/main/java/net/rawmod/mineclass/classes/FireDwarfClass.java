@@ -109,5 +109,10 @@ public class FireDwarfClass extends MineClassImpl {
   }
 
   @Override
+  public String getName() {
+    return "Fire dwarf";
+  }
+
+  @Override
   public void giveItems(Player player) {}
 }

@@ -94,5 +94,10 @@ public class DwarfClass extends MineClassImpl {
   }
 
   @Override
+  public String getName() {
+    return "Dwarf";
+  }
+
+  @Override
   public void giveItems(Player player) {}
 }

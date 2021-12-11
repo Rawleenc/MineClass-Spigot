@@ -73,5 +73,10 @@ public class ElfClass extends MineClassImpl {
   }
 
   @Override
+  public String getName() {
+    return "Elf";
+  }
+
+  @Override
   public void giveItems(Player player) {}
 }

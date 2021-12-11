@@ -65,6 +65,11 @@ public class BeastMasterClass extends MineClassImpl {
   }
 
   @Override
+  public String getName() {
+    return "Beast master";
+  }
+
+  @Override
   public void giveItems(Player player) {
     if (!player.getInventory().contains(Material.BONE)) {
       ItemStack itemStack = new ItemStack(Material.BONE, 1);

@@ -20,6 +20,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
@@ -75,16 +76,25 @@ public class MineClassListeners implements Listener {
     applyBadEffects(player, itemInHand);
   }
 
-  @EventHandler
-  public void on(PlayerItemDamageEvent event) {
-    Player player = event.getPlayer();
-    ItemStack itemInHand = event.getItem();
-    applyBadEffects(player, itemInHand);
+  private boolean isItemforbidden(Player player, ItemStack itemStack) {
+    Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
+    return mineClass
+        .map(
+            aClass ->
+                Optional.ofNullable(itemStack.getItemMeta())
+                    .map(ItemMeta::getLore)
+                    .map(it -> it.contains(player.getName()) && !it.contains(aClass.getName()))
+                    .orElse(false))
+        .orElse(false);
   }
 
   private void applyBadEffects(Player player, ItemStack itemInHand) {
+    if (itemInHand == null) {
+      return;
+    }
     Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
-    if (mineClass.isPresent() && mineClass.get().isItemForbidden(itemInHand.getType())) {
+    if (mineClass.isPresent() && mineClass.get().isItemForbidden(itemInHand.getType())
+        || isItemforbidden(player, itemInHand)) {
       player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 200, 0));
       if (MineClassFactory.getInstance().getClassCode(player).equals("elf")) {
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 200, 3));
@@ -101,11 +111,10 @@ public class MineClassListeners implements Listener {
   public void on(PlayerItemHeldEvent event) {
     Player player = event.getPlayer();
     ItemStack itemStack = player.getInventory().getItem(event.getNewSlot());
-    player.sendMessage(String.valueOf(itemStack));
     Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
     if (itemStack != null
-        && mineClass.isPresent()
-        && mineClass.get().isItemForbidden(itemStack.getType())) {
+        && (mineClass.isPresent() && mineClass.get().isItemForbidden(itemStack.getType())
+            || isItemforbidden(player, itemStack))) {
       player.sendMessage("Warning : You are unable to use this item efficiently.");
     }
   }
@@ -285,6 +294,8 @@ public class MineClassListeners implements Listener {
   @EventHandler
   public void on(PlayerInteractEvent event) {
     Player player = event.getPlayer();
+    ItemStack itemInHand = event.getItem();
+    applyBadEffects(player, itemInHand);
     if (player.isSneaking()
         && event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
         && event.useInteractedBlock().equals(Event.Result.ALLOW)
@@ -319,6 +330,17 @@ public class MineClassListeners implements Listener {
         && event.getItem().getType().equals(Material.ENDER_PEARL)) {
       player.openInventory(player.getEnderChest());
       event.setCancelled(true);
+    }
+    if (player.isSneaking()
+        && (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+            || event.getAction().equals(Action.RIGHT_CLICK_AIR))
+        && event.getItem() != null) {
+      Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
+      mineClass.ifPresent(
+          it -> {
+            it.enchantItem(event.getItem(), player);
+            event.setCancelled(true);
+          });
     }
   }
 

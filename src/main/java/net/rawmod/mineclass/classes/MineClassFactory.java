@@ -55,6 +55,8 @@ public class MineClassFactory {
       List<String> loreList = new ArrayList<>();
       loreList.add("Soulbound");
       loreList.add(player.getName());
+      Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
+      mineClass.ifPresent(aClass -> loreList.add(aClass.getName()));
       itemMeta.setLore(loreList);
       itemStack.setItemMeta(itemMeta);
     }

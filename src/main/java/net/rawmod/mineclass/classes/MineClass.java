@@ -29,5 +29,7 @@ public interface MineClass {
 
   String getCode();
 
+  String getName();
+
   void dropForbiddenItems(Player player);
 }

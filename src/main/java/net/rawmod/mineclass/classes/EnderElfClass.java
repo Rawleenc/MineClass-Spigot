@@ -79,6 +79,11 @@ public class EnderElfClass extends MineClassImpl {
   }
 
   @Override
+  public String getName() {
+    return "Ender elf";
+  }
+
+  @Override
   public void reapplyEffects(Player player) {
     super.reapplyEffects(player);
     if (player.getWorld().getEnvironment().equals(World.Environment.THE_END)) {
