@@ -40,7 +40,6 @@ public class CommandClass implements CommandExecutor {
         MineClassFactory.clearAllClassEffects(player);
         MineClassFactory.getInstance().reapplyEffectsByCode(args[0], player);
         MineClassFactory.getInstance().giveItemsForClassByCode(args[0], player);
-        MineClassFactory.getInstance().dropForbiddenItemsForClassByCode(args[0], player);
         MineClassFactory.getInstance().setClassCode(player, args[0]);
         if (!player.hasPotionEffect(PotionEffectType.SATURATION)) {
           player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 200, 9));

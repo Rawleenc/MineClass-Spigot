@@ -68,17 +68,17 @@ public class BeastMasterClass extends MineClassImpl {
   public void giveItems(Player player) {
     if (!player.getInventory().contains(Material.BONE)) {
       ItemStack itemStack = new ItemStack(Material.BONE, 1);
-      enchantItem(itemStack);
+      enchantItem(itemStack, player);
       player.getInventory().addItem(itemStack);
     }
     if (!player.getInventory().contains(Material.SALMON)) {
       ItemStack itemStack = new ItemStack(Material.SALMON, 1);
-      enchantItem(itemStack);
+      enchantItem(itemStack, player);
       player.getInventory().addItem(itemStack);
     }
     if (!player.getInventory().contains(Material.SADDLE)) {
       ItemStack itemStack = new ItemStack(Material.SADDLE, 1);
-      enchantItem(itemStack);
+      enchantItem(itemStack, player);
       player.getInventory().addItem(itemStack);
     }
   }

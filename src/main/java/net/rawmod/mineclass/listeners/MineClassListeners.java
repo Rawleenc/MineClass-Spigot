@@ -14,9 +14,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -59,24 +60,62 @@ public class MineClassListeners implements Listener {
   }
 
   @EventHandler
-  public void on(EntityPickupItemEvent event) {
-    if (event.getEntity() instanceof Player) {
-      Player player = (Player) event.getEntity();
+  public void on(CraftItemEvent event) {
+    if (event.getWhoClicked() instanceof Player) {
+      Player player = (Player) event.getWhoClicked();
       Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
-      if (mineClass.isPresent()) {
-        if (mineClass.get().isItemForbidden(event.getItem().getItemStack().getType())) {
-          event.setCancelled(true);
-        }
-        mineClass.get().enchantItem(event.getItem().getItemStack());
+      mineClass.ifPresent(it -> enchantItem(event));
+    }
+  }
+
+  @EventHandler
+  public void on(BlockDamageEvent event) {
+    Player player = event.getPlayer();
+    ItemStack itemInHand = event.getItemInHand();
+    applyBadEffects(player, itemInHand);
+  }
+
+  @EventHandler
+  public void on(PlayerItemDamageEvent event) {
+    Player player = event.getPlayer();
+    ItemStack itemInHand = event.getItem();
+    applyBadEffects(player, itemInHand);
+  }
+
+  private void applyBadEffects(Player player, ItemStack itemInHand) {
+    Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
+    if (mineClass.isPresent() && mineClass.get().isItemForbidden(itemInHand.getType())) {
+      player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 200, 0));
+      if (MineClassFactory.getInstance().getClassCode(player).equals("elf")) {
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 200, 3));
+      } else {
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 200, 1));
       }
+      player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 200, 9));
+      player.setFoodLevel(Math.max(player.getFoodLevel() - 2, 0));
+      player.setSaturation(0);
+    }
+  }
+
+  @EventHandler
+  public void on(PlayerItemHeldEvent event) {
+    Player player = event.getPlayer();
+    ItemStack itemStack = player.getInventory().getItem(event.getNewSlot());
+    player.sendMessage(String.valueOf(itemStack));
+    Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
+    if (itemStack != null
+        && mineClass.isPresent()
+        && mineClass.get().isItemForbidden(itemStack.getType())) {
+      player.sendMessage("Warning : You are unable to use this item efficiently.");
     }
   }
 
   @EventHandler
   public void on(PlayerDeathEvent event) {
+    Player player = event.getEntity();
     List<ItemStack> itemStackList =
         event.getDrops().stream()
-            .filter(MineClassFactory::isSoulBound)
+            .filter(it -> MineClassFactory.isSoulBound(it, player))
             .collect(Collectors.toList());
     event.getDrops().removeAll(itemStackList);
     ClassItemPossessed.getInstance().addItems(event.getEntity().getName(), itemStackList);
@@ -91,41 +130,14 @@ public class MineClassListeners implements Listener {
     ClassItemPossessed.getInstance().clearItems(event.getPlayer().getName());
   }
 
-  @EventHandler
-  public void on(InventoryClickEvent event) {
-    if (event.getWhoClicked() instanceof Player) {
-      if (isForbiddenItem(event)) {
-        event.setCancelled(true);
-        return;
-      }
-      enchantItem(event);
-    }
-  }
-
-  private boolean isForbiddenItem(InventoryClickEvent event) {
+  private void enchantItem(CraftItemEvent event) {
     Player player = (Player) event.getWhoClicked();
     Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
-    if (mineClass.isPresent()) {
-      if (event.getCurrentItem() != null
-          && mineClass.get().isItemForbidden(event.getCurrentItem().getType())) {
-        return true;
-      }
-      return event.getCursor() != null
-          && mineClass.get().isItemForbidden(event.getCursor().getType());
+    if (event.getCurrentItem() != null) {
+      mineClass.ifPresent(it -> it.enchantItem(event.getCurrentItem(), player));
     }
-    return false;
-  }
-
-  private void enchantItem(InventoryClickEvent event) {
-    Player player = (Player) event.getWhoClicked();
-    Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
-    if (mineClass.isPresent()) {
-      if (event.getCurrentItem() != null && !MineClassFactory.isSoulBound(event.getCurrentItem())) {
-        mineClass.get().enchantItem(event.getCurrentItem());
-      }
-      if (event.getCursor() != null && !MineClassFactory.isSoulBound(event.getCursor())) {
-        mineClass.get().enchantItem(event.getCursor());
-      }
+    if (event.getCursor() != null) {
+      mineClass.ifPresent(it -> it.enchantItem(event.getCursor(), player));
     }
   }
 
@@ -182,16 +194,17 @@ public class MineClassListeners implements Listener {
   public void on(FoodLevelChangeEvent event) {
     if (event.getEntity() instanceof Player) {
       Player player = (Player) event.getEntity();
-      if (MineClassFactory.getInstance().getClassCode(player).equals("elf")) {
-        int difference = player.getFoodLevel() - event.getFoodLevel();
+      if (MineClassFactory.getInstance().getClassCode(player).equals("elf")
+          && player.getPotionEffect(PotionEffectType.HUNGER) == null) {
+        int difference = event.getFoodLevel() - player.getFoodLevel();
         if (difference > 0) {
-          event.setCancelled(true);
+          event.setFoodLevel(player.getFoodLevel() + (difference * 2));
         }
       }
       if (MineClassFactory.getInstance().getClassCode(player).equals("ender_elf")) {
         int difference = player.getFoodLevel() - event.getFoodLevel();
         if (difference > 0) {
-          event.setFoodLevel(player.getFoodLevel() - (difference * 2));
+          event.setFoodLevel(Math.max(player.getFoodLevel() - (difference * 2), 0));
         }
       }
     }
@@ -201,13 +214,14 @@ public class MineClassListeners implements Listener {
   public void on(EntityDamageByEntityEvent event) {
     if (event.getDamager() instanceof Player) {
       Player player = (Player) event.getDamager();
+      ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
       if (MineClassFactory.getInstance().getClassCode(player).equals("ender_elf")
-          && player.getInventory().getItemInMainHand().getType().equals(Material.ENDER_PEARL)) {
+          && itemInMainHand.getType().equals(Material.ENDER_PEARL)) {
         PlayerHitCounter.getInstance().increaseHitCount(player);
         if (player.getAttackCooldown() == 1) {
           // Vampirisme
-          if (player.getHealth() <= 19) {
-            player.setHealth(player.getHealth() + 1);
+          if (player.getHealth() < 20) {
+            player.setHealth(Math.min(player.getHealth() + 1, 20));
           }
         }
         if (PlayerHitCounter.getInstance().getHitCounter(player) == 15) {
@@ -219,7 +233,10 @@ public class MineClassListeners implements Listener {
           player.addPotionEffect(absorption);
         }
         // Damage
-        event.setDamage(event.getDamage() * (player.getAttackCooldown() * 10));
+        event.setDamage(Math.max(event.getDamage() * (player.getAttackCooldown() * 10), 1));
+      } else if (MineClassFactory.getInstance().getClassCode(player).equals("elf")
+          && itemInMainHand.getType().equals(Material.BOW)) {
+        event.setDamage(Math.max(event.getDamage() * (player.getAttackCooldown() * 4), 1));
       }
     } else if (event.getDamager().hasMetadata("beastMasterWolfType")) {
       event.getDamager().getMetadata("beastMasterWolfType").stream()
@@ -251,7 +268,7 @@ public class MineClassListeners implements Listener {
       if (MineClassFactory.getInstance().getClassCode(player).equals("ender_elf")
           && event.getEntity() instanceof EnderPearl) {
         ItemStack itemStack = new ItemStack(Material.ENDER_PEARL, 1);
-        MineClassFactory.setUnbreakableAndSoulbound(itemStack);
+        MineClassFactory.setUnbreakableAndSoulbound(itemStack, player);
         player.getInventory().addItem(itemStack);
       }
     }

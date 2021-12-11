@@ -32,9 +32,10 @@ public class MineClassFactory {
     return INSTANCE;
   }
 
-  public static boolean isSoulBound(ItemStack itemStack) {
+  public static boolean isSoulBound(ItemStack itemStack, Player player) {
     if (itemStack.getItemMeta() != null && itemStack.getItemMeta().getLore() != null) {
-      return itemStack.getItemMeta().getLore().contains("Soulbound");
+      return itemStack.getItemMeta().getLore().contains("Soulbound")
+          && itemStack.getItemMeta().getLore().contains(player.getName());
     }
     return false;
   }
@@ -47,11 +48,14 @@ public class MineClassFactory {
     }
   }
 
-  public static void setUnbreakableAndSoulbound(ItemStack itemStack) {
+  public static void setUnbreakableAndSoulbound(ItemStack itemStack, Player player) {
     if (itemStack.getItemMeta() != null) {
       ItemMeta itemMeta = itemStack.getItemMeta();
       itemMeta.setUnbreakable(true);
-      itemMeta.setLore(Collections.singletonList("Soulbound"));
+      List<String> loreList = new ArrayList<>();
+      loreList.add("Soulbound");
+      loreList.add(player.getName());
+      itemMeta.setLore(loreList);
       itemStack.setItemMeta(itemMeta);
     }
   }

@@ -30,7 +30,7 @@ public abstract class MineClassImpl implements MineClass {
   }
 
   @Override
-  public void enchantItem(ItemStack itemStack) {
+  public void enchantItem(ItemStack itemStack, Player player) {
     if (getClassEnchantments().containsKey(itemStack.getType())) {
       getClassEnchantments()
           .getOrDefault(itemStack.getType(), new ArrayList<>())
@@ -38,7 +38,7 @@ public abstract class MineClassImpl implements MineClass {
               enchantmentIntegerPair ->
                   itemStack.addUnsafeEnchantment(
                       enchantmentIntegerPair.getFirst(), enchantmentIntegerPair.getSecond()));
-      MineClassFactory.setUnbreakableAndSoulbound(itemStack);
+      MineClassFactory.setUnbreakableAndSoulbound(itemStack, player);
     }
   }
 

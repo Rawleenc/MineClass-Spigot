@@ -23,7 +23,7 @@ public interface MineClass {
 
   boolean isItemForbidden(Material type);
 
-  void enchantItem(ItemStack itemStack);
+  void enchantItem(ItemStack itemStack, Player player);
 
   void giveItems(Player player);
 
