@@ -34,8 +34,11 @@ public class MineClassFactory {
 
   public static boolean isSoulBound(ItemStack itemStack, Player player) {
     if (itemStack.getItemMeta() != null && itemStack.getItemMeta().getLore() != null) {
+      Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
       return itemStack.getItemMeta().getLore().contains("Soulbound")
-          && itemStack.getItemMeta().getLore().contains(player.getName());
+          && itemStack.getItemMeta().getLore().contains(player.getName())
+          && mineClass.isPresent()
+          && itemStack.getItemMeta().getLore().contains(mineClass.get().getName());
     }
     return false;
   }
