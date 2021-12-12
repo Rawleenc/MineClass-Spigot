@@ -261,7 +261,7 @@ public class MineClassListeners implements Listener {
         event.setDamage(Math.max(event.getDamage() * (player.getAttackCooldown() * 10), 1));
       } else if (MineClassFactory.getInstance().getClassCode(player).equals("elf")
           && itemInMainHand.getType().equals(Material.BOW)) {
-        event.setDamage(Math.max(event.getDamage() * (player.getAttackCooldown() * 4), 1));
+        event.setDamage(Math.max(event.getDamage() * (player.getAttackCooldown() * 8), 1));
       }
     } else if (event.getDamager().hasMetadata("beastMasterWolfType")) {
       event.getDamager().getMetadata("beastMasterWolfType").stream()
