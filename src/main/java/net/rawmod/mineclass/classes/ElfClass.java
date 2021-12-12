@@ -49,7 +49,8 @@ public class ElfClass extends MineClassImpl {
                   Material.BOW,
                   Arrays.asList(
                       new Pair<>(Enchantment.ARROW_INFINITE, 1),
-                      new Pair<>(Enchantment.ARROW_DAMAGE, 8))))
+                      new Pair<>(Enchantment.ARROW_DAMAGE, 8),
+                      new Pair<>(Enchantment.KNOCKBACK, 1))))
           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
   @Override
