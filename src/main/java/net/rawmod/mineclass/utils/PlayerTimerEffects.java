@@ -27,11 +27,13 @@ public class PlayerTimerEffects extends BukkitRunnable {
     if (mineClass.isPresent() && mineClass.get().getCode().equals("naga")) {
       if (!player.isInWater()) {
         player.damage(1);
-
       }
       if (player.isInWater() != inWater) {
         inWater = player.isInWater();
         mineClass.get().reapplyEffects(player);
+      }
+      if (player.getFireTicks() > 0) {
+        player.damage(4);
       }
     }
     if (mineClass.isPresent() && mineClass.get().getCode().equals("fire_dwarf")) {
