@@ -357,6 +357,7 @@ public class MineClassListeners implements Listener {
       if (MineClassFactory.isSimpleSoulBound(itemInHand)) {
         System.out.println("Clearing");
         MineClassFactory.clearClassItem(player, itemInHand);
+        event.setCancelled(true);
       } else {
         if (mineClass.isPresent()) {
           mineClass.get().enchantItem(itemInHand, player);
