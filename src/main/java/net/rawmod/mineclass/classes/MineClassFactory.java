@@ -21,6 +21,7 @@ public class MineClassFactory {
     availableClasses.put("fire_dwarf", new FireDwarfClass());
     availableClasses.put("ender_elf", new EnderElfClass());
     availableClasses.put("beast_master", new BeastMasterClass());
+    availableClasses.put("naga", new NagaClass());
   }
 
   /** Point d'accès pour l'instance unique du singleton */

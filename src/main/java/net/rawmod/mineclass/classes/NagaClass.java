@@ -13,23 +13,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class EnderElfClass extends MineClassImpl {
+public class NagaClass extends MineClassImpl {
 
   private static final Set<Material> forbiddenItems =
-      new HashSet<Material>() {
+      new HashSet<>() {
         {
           add(Material.DIAMOND_SWORD);
           add(Material.GOLDEN_SWORD);
           add(Material.IRON_SWORD);
           add(Material.NETHERITE_SWORD);
-          add(Material.DIAMOND_PICKAXE);
-          add(Material.GOLDEN_PICKAXE);
-          add(Material.IRON_PICKAXE);
-          add(Material.NETHERITE_PICKAXE);
-          add(Material.DIAMOND_SHOVEL);
-          add(Material.GOLDEN_SHOVEL);
-          add(Material.IRON_SHOVEL);
-          add(Material.NETHERITE_SHOVEL);
           add(Material.DIAMOND_HOE);
           add(Material.GOLDEN_HOE);
           add(Material.IRON_HOE);
@@ -40,22 +32,42 @@ public class EnderElfClass extends MineClassImpl {
           add(Material.NETHERITE_AXE);
           add(Material.CROSSBOW);
           add(Material.BOW);
-          add(Material.TRIDENT);
         }
       };
 
-  private static final Map<PotionEffectType, Integer> potionEffects =
+  private static final Map<PotionEffectType, Integer> potionEffectsInWater =
       Stream.of(
               new Object[][] {
+                {PotionEffectType.WATER_BREATHING, 1},
+                {PotionEffectType.HEALTH_BOOST, 2},
+                {PotionEffectType.CONDUIT_POWER, 1},
+                {PotionEffectType.DOLPHINS_GRACE, 3},
+                {PotionEffectType.SATURATION, 1},
                 {PotionEffectType.NIGHT_VISION, 1},
-                {PotionEffectType.ABSORPTION, 1},
+                {PotionEffectType.DAMAGE_RESISTANCE, 2},
+                {PotionEffectType.INCREASE_DAMAGE, 2},
+                {PotionEffectType.FAST_DIGGING, 10},
+              })
+          .collect(Collectors.toMap(data -> (PotionEffectType) data[0], data -> (Integer) data[1]));
+
+  private static final Map<PotionEffectType, Integer> potionEffectsOnEarth =
+      Stream.of(
+              new Object[][] {
+                {PotionEffectType.SLOW, 4},
+                {PotionEffectType.SLOW_DIGGING, 1},
+                {PotionEffectType.HUNGER, 10},
+                {PotionEffectType.WEAKNESS, 1},
               })
           .collect(Collectors.toMap(data -> (PotionEffectType) data[0], data -> (Integer) data[1]));
 
   private static final Map<Material, List<Pair<Enchantment, Integer>>> classEnchantments =
       Stream.of(
               new AbstractMap.SimpleEntry<>(
-                  Material.ENDER_PEARL, new ArrayList<Pair<Enchantment, Integer>>()))
+                  Material.TRIDENT,
+                  Arrays.asList(
+                      new Pair<>(Enchantment.LOYALTY, 3),
+                      new Pair<>(Enchantment.CHANNELING, 1),
+                      new Pair<>(Enchantment.IMPALING, 5))))
           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
   @Override
@@ -65,7 +77,7 @@ public class EnderElfClass extends MineClassImpl {
 
   @Override
   public Map<PotionEffectType, Integer> getPotionEffects(Player player) {
-    return potionEffects;
+    return player.isInWater() ? potionEffectsInWater : potionEffectsOnEarth;
   }
 
   @Override
@@ -75,31 +87,18 @@ public class EnderElfClass extends MineClassImpl {
 
   @Override
   public String getCode() {
-    return "ender_elf";
+    return "naga";
   }
 
   @Override
   public String getName() {
-    return "Ender elf";
-  }
-
-  @Override
-  public void reapplyEffects(Player player) {
-    super.reapplyEffects(player);
-    if (player.getWorld().getEnvironment().equals(World.Environment.THE_END)) {
-      player.addPotionEffect(
-          new PotionEffect(PotionEffectType.SATURATION, Integer.MAX_VALUE, 0, false, false));
-      player.addPotionEffect(
-          new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false));
-      player.addPotionEffect(
-          new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0, false, false));
-    }
+    return "Naga";
   }
 
   @Override
   public void giveItems(Player player) {
-    if (!player.getInventory().contains(Material.ENDER_PEARL)) {
-      ItemStack itemStack = new ItemStack(Material.ENDER_PEARL, 2);
+    if (!player.getInventory().contains(Material.TRIDENT)) {
+      ItemStack itemStack = new ItemStack(Material.TRIDENT, 1);
       enchantItem(itemStack, player);
       player.getInventory().addItem(itemStack);
     }

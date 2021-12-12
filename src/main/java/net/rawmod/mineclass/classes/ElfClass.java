@@ -58,7 +58,7 @@ public class ElfClass extends MineClassImpl {
   }
 
   @Override
-  public Map<PotionEffectType, Integer> getPotionEffects() {
+  public Map<PotionEffectType, Integer> getPotionEffects(Player player) {
     return potionEffects;
   }
 

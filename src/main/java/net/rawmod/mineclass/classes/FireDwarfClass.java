@@ -2,8 +2,10 @@ package net.rawmod.mineclass.classes;
 
 import net.rawmod.mineclass.utils.Pair;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
@@ -89,12 +91,25 @@ public class FireDwarfClass extends MineClassImpl {
           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
   @Override
+  public void reapplyEffects(Player player) {
+    super.reapplyEffects(player);
+    if (player.getWorld().getEnvironment().equals(World.Environment.NETHER)) {
+      player.addPotionEffect(
+          new PotionEffect(PotionEffectType.SATURATION, Integer.MAX_VALUE, 0, false, false));
+      player.addPotionEffect(
+          new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false));
+      player.addPotionEffect(
+          new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0, false, false));
+    }
+  }
+
+  @Override
   public Set<Material> getForbiddenItems() {
     return forbiddenItems;
   }
 
   @Override
-  public Map<PotionEffectType, Integer> getPotionEffects() {
+  public Map<PotionEffectType, Integer> getPotionEffects(Player player) {
     return potionEffects;
   }
 

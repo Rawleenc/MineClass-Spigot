@@ -15,7 +15,7 @@ public interface MineClass {
 
   Set<Material> getForbiddenItems();
 
-  Map<PotionEffectType, Integer> getPotionEffects();
+  Map<PotionEffectType, Integer> getPotionEffects(Player player);
 
   Map<Material, List<Pair<Enchantment, Integer>>> getClassEnchantments();
 

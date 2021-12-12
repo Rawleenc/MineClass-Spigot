@@ -26,6 +26,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,6 +35,8 @@ import java.util.stream.Collectors;
 public class MineClassListeners implements Listener {
 
   private final Mineclass plugin;
+  private final HashMap<Player, PlayerTimerEffects> playerTimerEffectsHashMap =
+      new HashMap<>();
 
   public MineClassListeners(Mineclass plugin) {
     this.plugin = plugin;
@@ -46,10 +49,25 @@ public class MineClassListeners implements Listener {
     Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
     if (mineClass.isPresent()) {
       mineClass.get().reapplyEffects(player);
-      player.sendMessage(String.format("Reminder : You are a %s.", mineClass.get().getCode()));
+      player.sendMessage(String.format("Reminder, your class is : %s.", mineClass.get().getName()));
     } else {
       player.sendMessage(
           "Hello ! The amazing MineClass mod is available on this server ! You can pick a class with the /class command.");
+    }
+    if (!playerTimerEffectsHashMap.containsKey(player)) {
+      PlayerTimerEffects playerTimerEffects =
+          new PlayerTimerEffects(player);
+      playerTimerEffectsHashMap.put(player, playerTimerEffects);
+      playerTimerEffects.runTaskTimer(this.plugin, 20, 20);
+    } else {
+      playerTimerEffectsHashMap.get(player).runTaskTimer(this.plugin, 20, 20);
+    }
+  }
+
+  public void on(PlayerQuitEvent event) {
+    Player player = event.getPlayer();
+    if (playerTimerEffectsHashMap.containsKey(player)) {
+      playerTimerEffectsHashMap.get(player).cancel();
     }
   }
 
@@ -230,7 +248,7 @@ public class MineClassListeners implements Listener {
         if (player.getAttackCooldown() == 1) {
           // Vampirisme
           if (player.getHealth() < 20) {
-            player.setHealth(Math.min(player.getHealth() + 1, 20));
+            PlayerUtils.heal(player, 1);
           }
         }
         if (PlayerHitCounter.getInstance().getHitCounter(player) == 15) {
