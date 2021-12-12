@@ -43,6 +43,18 @@ public abstract class MineClassImpl implements MineClass {
   }
 
   @Override
+  public void disenchantItem(ItemStack itemStack, Player player) {
+    if (getClassEnchantments().containsKey(itemStack.getType())) {
+      getClassEnchantments()
+          .getOrDefault(itemStack.getType(), new ArrayList<>())
+          .forEach(
+              enchantmentIntegerPair ->
+                  itemStack.removeEnchantment(enchantmentIntegerPair.getFirst()));
+      MineClassFactory.removeUnbreakableAndSoulbound(itemStack, player);
+    }
+  }
+
+  @Override
   public void dropForbiddenItems(Player player) {
     for (ItemStack content : player.getInventory().getContents()) {
       if (content != null && getForbiddenItems().contains(content.getType())) {

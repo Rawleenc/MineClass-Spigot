@@ -35,8 +35,7 @@ import java.util.stream.Collectors;
 public class MineClassListeners implements Listener {
 
   private final Mineclass plugin;
-  private final HashMap<Player, PlayerTimerEffects> playerTimerEffectsHashMap =
-      new HashMap<>();
+  private final HashMap<Player, PlayerTimerEffects> playerTimerEffectsHashMap = new HashMap<>();
 
   public MineClassListeners(Mineclass plugin) {
     this.plugin = plugin;
@@ -55,8 +54,7 @@ public class MineClassListeners implements Listener {
           "Hello ! The amazing MineClass mod is available on this server ! You can pick a class with the /class command.");
     }
     if (!playerTimerEffectsHashMap.containsKey(player)) {
-      PlayerTimerEffects playerTimerEffects =
-          new PlayerTimerEffects(player);
+      PlayerTimerEffects playerTimerEffects = new PlayerTimerEffects(player);
       playerTimerEffectsHashMap.put(player, playerTimerEffects);
       playerTimerEffects.runTaskTimer(this.plugin, 20, 20);
     } else {
@@ -313,52 +311,62 @@ public class MineClassListeners implements Listener {
   public void on(PlayerInteractEvent event) {
     Player player = event.getPlayer();
     ItemStack itemInHand = event.getItem();
-    applyBadEffects(player, itemInHand);
+    boolean effect = false;
     if (player.isSneaking()
         && event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
         && event.useInteractedBlock().equals(Event.Result.ALLOW)
         && MineClassFactory.getInstance().getClassCode(player).equals("beast_master")
         && event.getClickedBlock() != null
-        && event.getItem() != null) {
+        && itemInHand != null) {
       event.setCancelled(true);
-      ItemStack itemStack = event.getItem();
-      switch (itemStack.getType()) {
+      switch (itemInHand.getType()) {
         case SADDLE:
           invokeHorse(event, player);
           break;
         case BONE:
           try {
-            invokeWolf(event, player, itemStack);
+            invokeWolf(event, player, itemInHand);
           } catch (IllegalStateException e) {
             player.sendMessage(e.getMessage());
           }
           break;
         case SALMON:
-          invokeCat(event, player, itemStack);
+          invokeCat(event, player, itemInHand);
           break;
         default:
           break;
       }
+      effect = true;
     }
     if (player.isSneaking()
         && (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
             || event.getAction().equals(Action.RIGHT_CLICK_AIR))
         && MineClassFactory.getInstance().getClassCode(player).equals("ender_elf")
-        && event.getItem() != null
-        && event.getItem().getType().equals(Material.ENDER_PEARL)) {
+        && itemInHand != null
+        && itemInHand.getType().equals(Material.ENDER_PEARL)) {
       player.openInventory(player.getEnderChest());
       event.setCancelled(true);
+      effect = true;
     }
     if (player.isSneaking()
         && (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
             || event.getAction().equals(Action.RIGHT_CLICK_AIR))
-        && event.getItem() != null) {
+        && itemInHand != null) {
+      System.out.println(itemInHand);
       Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
-      mineClass.ifPresent(
-          it -> {
-            it.enchantItem(event.getItem(), player);
-            event.setCancelled(true);
-          });
+      if (MineClassFactory.isSimpleSoulBound(itemInHand)) {
+        System.out.println("Clearing");
+        MineClassFactory.clearClassItem(player, itemInHand);
+      } else {
+        if (mineClass.isPresent()) {
+          mineClass.get().enchantItem(itemInHand, player);
+          event.setCancelled(true);
+        }
+      }
+      effect = true;
+    }
+    if (!effect) {
+      applyBadEffects(player, itemInHand);
     }
   }
 

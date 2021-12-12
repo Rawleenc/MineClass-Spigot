@@ -33,6 +33,13 @@ public class MineClassFactory {
     return INSTANCE;
   }
 
+  public static boolean isSimpleSoulBound(ItemStack itemStack) {
+    if (itemStack.getItemMeta() != null && itemStack.getItemMeta().getLore() != null) {
+      return itemStack.getItemMeta().getLore().contains("Soulbound");
+    }
+    return false;
+  }
+
   public static boolean isSoulBound(ItemStack itemStack, Player player) {
     if (itemStack.getItemMeta() != null && itemStack.getItemMeta().getLore() != null) {
       Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
@@ -52,6 +59,21 @@ public class MineClassFactory {
     }
   }
 
+  public static void clearClassItem(Player player, ItemStack itemStack) {
+    ItemMeta itemMeta = itemStack.getItemMeta();
+    if (itemMeta != null) {
+      List<String> loreList = itemMeta.getLore();
+      if (loreList != null && loreList.contains("Soulbound")) {
+        String mineClassName = loreList.get(2);
+        System.out.println(mineClassName);
+        Optional<MineClass> optionalMineClass =
+            MineClassFactory.getInstance().findClassByName(mineClassName);
+        optionalMineClass.ifPresent(System.out::println);
+        optionalMineClass.ifPresent(mineClass -> mineClass.disenchantItem(itemStack, player));
+      }
+    }
+  }
+
   public static void setUnbreakableAndSoulbound(ItemStack itemStack, Player player) {
     if (itemStack.getItemMeta() != null) {
       ItemMeta itemMeta = itemStack.getItemMeta();
@@ -61,6 +83,16 @@ public class MineClassFactory {
       loreList.add(player.getName());
       Optional<MineClass> mineClass = MineClassFactory.getInstance().getRightClass(player);
       mineClass.ifPresent(aClass -> loreList.add(aClass.getName()));
+      itemMeta.setLore(loreList);
+      itemStack.setItemMeta(itemMeta);
+    }
+  }
+
+  public static void removeUnbreakableAndSoulbound(ItemStack itemStack, Player player) {
+    if (itemStack.getItemMeta() != null) {
+      ItemMeta itemMeta = itemStack.getItemMeta();
+      itemMeta.setUnbreakable(false);
+      List<String> loreList = new ArrayList<>();
       itemMeta.setLore(loreList);
       itemStack.setItemMeta(itemMeta);
     }
@@ -86,6 +118,15 @@ public class MineClassFactory {
     for (Map.Entry<String, MineClass> stringMineClassEntry : availableClasses.entrySet()) {
       if (getClassCode(player) != null
           && getClassCode(player).equals(stringMineClassEntry.getKey())) {
+        return Optional.of(stringMineClassEntry.getValue());
+      }
+    }
+    return Optional.empty();
+  }
+
+  public synchronized Optional<MineClass> findClassByName(String name) {
+    for (Map.Entry<String, MineClass> stringMineClassEntry : availableClasses.entrySet()) {
+      if (name != null && name.equals(stringMineClassEntry.getValue().getName())) {
         return Optional.of(stringMineClassEntry.getValue());
       }
     }
